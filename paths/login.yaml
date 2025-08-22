@@ -1,0 +1,49 @@
+/protocol/openid-connect/token:
+  post:
+    summary: Get Access Token using Password Grant
+    description: |
+      Get token using Resource Owner Password Credentials (ROPC).
+    operationId: getAccessToken
+    requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            required:
+              - client_id
+              - grant_type
+              - username
+              - password
+              - client_secret
+            properties:
+              client_id:
+                type: string
+                description: Client ID
+                example: loyalty-partner-client
+              grant_type:
+                type: string
+                enum: [password]
+                description: OAuth2 grant type
+                example: password
+              username:
+                type: string
+                description: User's username
+                example: demo_user@partner.com
+              password:
+                type: string
+                description: User's password
+                example: P@ssword123
+              client_secret:
+                type: string
+                description: Client Secret
+                example: abcd1234
+    responses:
+      '200':
+        description: Successful token response
+      '400':
+        description: Invalid request
+      '401':
+        description: Unauthorized
+    tags:
+      - Authentication

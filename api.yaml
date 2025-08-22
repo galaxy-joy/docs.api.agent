@@ -1,85 +1,15 @@
 openapi: 3.0.3
 info:
   title: SkyJoy Auth API
-  description: OpenID Connect Token Endpoint for Loyalty Partner realm (ROPC flow)
   version: 1.0.0
+  description: Authentication APIs for SkyJoy Partner Realm
 
 servers:
   - url: https://id.uat.skyjoy.io/realms/loyalty-partner
 
 paths:
-  /protocol/openid-connect/token:
-    post:
-      summary: Get Access Token using Password Grant
-      description: |
-        This endpoint returns an access token using the Resource Owner Password Credentials (ROPC) grant type.
-        It is typically used when a trusted application collects user credentials directly.
-      operationId: getAccessToken
-      requestBody:
-        required: true
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - client_id
-                - grant_type
-                - username
-                - password
-                - client_secret
-              properties:
-                client_id:
-                  type: string
-                  description: Client ID registered in Keycloak
-                  example: loyalty-partner-client
-                grant_type:
-                  type: string
-                  description: OAuth2 grant type, must be `password` for ROPC
-                  enum: [password]
-                  example: password
-                username:
-                  type: string
-                  description: The end-user's username
-                  example: demo_user@partner.com
-                password:
-                  type: string
-                  description: The end-user's password
-                  example: P@ssw0rd123
-                client_secret:
-                  type: string
-                  description: Client secret corresponding to the client ID
-                  example: abcd1234efgh5678ijkl90mnop
-      responses:
-        '200':
-          description: Access token successfully returned
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  access_token:
-                    type: string
-                    description: JWT bearer token for accessing protected APIs
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-                  refresh_token:
-                    type: string
-                    description: Token used to refresh the access token
-                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-                  token_type:
-                    type: string
-                    description: Type of token issued
-                    example: bearer
-                  expires_in:
-                    type: integer
-                    description: Expiration time in seconds
-                    example: 300
-                  scope:
-                    type: string
-                    description: Granted scopes
-                    example: openid profile email
-        '400':
-          description: Invalid request or missing parameters
-        '401':
-          description: Unauthorized - invalid client or user credentials
-      tags:
-        - Authentication
+  # Include separate API files
+  <<: 
+    $ref: './paths/token-password.yaml'
+  <<:
+    $ref: './paths/token-refresh.yaml'
