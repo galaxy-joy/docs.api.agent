@@ -1,15 +1,12 @@
+# main.yaml
 openapi: 3.0.3
 info:
   title: SkyJoy Auth API
   version: 1.0.0
-  description: Authentication APIs for SkyJoy Partner Realm
+  description: Authentication API for SkyJoy partner
 
 servers:
   - url: https://id.uat.skyjoy.io/realms/loyalty-partner
 
 paths:
-  # Include separate API files
-  <<: 
-    $ref: './paths/token-password.yaml'
-  <<:
-    $ref: './paths/token-refresh.yaml'
+  $ref: ./paths/login.yaml
