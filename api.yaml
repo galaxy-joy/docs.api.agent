@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: SkyJoy Auth API
-  description: OpenID Connect Token Endpoint for Loyalty Partner realm
+  description: OpenID Connect Token Endpoint for Loyalty Partner realm (ROPC flow)
   version: 1.0.0
 
 servers:
@@ -10,8 +10,10 @@ servers:
 paths:
   /protocol/openid-connect/token:
     post:
-      summary: Get Access Token (Password Grant)
-      description: Get access token using Resource Owner Password Credentials (ROPC) grant.
+      summary: Get Access Token using Password Grant
+      description: |
+        This endpoint returns an access token using the Resource Owner Password Credentials (ROPC) grant type.
+        It is typically used when a trusted application collects user credentials directly.
       operationId: getAccessToken
       requestBody:
         required: true
@@ -28,23 +30,28 @@ paths:
               properties:
                 client_id:
                   type: string
-                  example: client_id
+                  description: Client ID registered in Keycloak
+                  example: loyalty-partner-client
                 grant_type:
                   type: string
+                  description: OAuth2 grant type, must be `password` for ROPC
                   enum: [password]
                   example: password
                 username:
                   type: string
-                  example: username
+                  description: The end-user's username
+                  example: demo_user@partner.com
                 password:
                   type: string
-                  example: password
+                  description: The end-user's password
+                  example: P@ssw0rd123
                 client_secret:
                   type: string
-                  example: client_secret
+                  description: Client secret corresponding to the client ID
+                  example: abcd1234efgh5678ijkl90mnop
       responses:
         '200':
-          description: Successful token response
+          description: Access token successfully returned
           content:
             application/json:
               schema:
@@ -52,21 +59,27 @@ paths:
                 properties:
                   access_token:
                     type: string
-                    description: JWT access token
+                    description: JWT bearer token for accessing protected APIs
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                   refresh_token:
                     type: string
-                    description: Refresh token
+                    description: Token used to refresh the access token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
                   token_type:
                     type: string
+                    description: Type of token issued
                     example: bearer
                   expires_in:
                     type: integer
+                    description: Expiration time in seconds
                     example: 300
                   scope:
                     type: string
+                    description: Granted scopes
+                    example: openid profile email
         '400':
-          description: Invalid request
+          description: Invalid request or missing parameters
         '401':
-          description: Unauthorized - Invalid credentials
+          description: Unauthorized - invalid client or user credentials
       tags:
         - Authentication
