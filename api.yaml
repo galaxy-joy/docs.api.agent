@@ -1,0 +1,72 @@
+openapi: 3.0.3
+info:
+  title: SkyJoy Auth API
+  description: OpenID Connect Token Endpoint for Loyalty Partner realm
+  version: 1.0.0
+
+servers:
+  - url: https://id.uat.skyjoy.io/realms/loyalty-partner
+
+paths:
+  /protocol/openid-connect/token:
+    post:
+      summary: Get Access Token (Password Grant)
+      description: Get access token using Resource Owner Password Credentials (ROPC) grant.
+      operationId: getAccessToken
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - client_id
+                - grant_type
+                - username
+                - password
+                - client_secret
+              properties:
+                client_id:
+                  type: string
+                  example: client_id
+                grant_type:
+                  type: string
+                  enum: [password]
+                  example: password
+                username:
+                  type: string
+                  example: username
+                password:
+                  type: string
+                  example: password
+                client_secret:
+                  type: string
+                  example: client_secret
+      responses:
+        '200':
+          description: Successful token response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWT access token
+                  refresh_token:
+                    type: string
+                    description: Refresh token
+                  token_type:
+                    type: string
+                    example: bearer
+                  expires_in:
+                    type: integer
+                    example: 300
+                  scope:
+                    type: string
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized - Invalid credentials
+      tags:
+        - Authentication
